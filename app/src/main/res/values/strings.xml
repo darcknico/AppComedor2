@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">AppComedor</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">D.N.I</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Entrar</string>
+    <string name="error_invalid_email">DNI inválido</string>
+    <string name="error_invalid_password">Contraseña demasiado corta</string>
+    <string name="error_incorrect_password">Contraseña inválido</string>
+    <string name="error_field_required">Este campo es requerido</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="app_name_login">Comedor UnSa</string>
+    <string name="action_login_close">Salir</string>
+    <string name="action_close">Close</string>
+    <string name="action_logout">Logout</string>
+    <string name="imagen">image</string>
+    <string name="txt_ticket_num">N°:</string>
+    <string name="txt_ticket_fecha">Fecha:</string>
+    <string name="txt_ticket_precio">Importe:</string>
+    <string name="txt_transaccion_concepto">Concepto:</string>
+    <string name="txt_transaccion_fecha">Fecha:</string>
+    <string name="txt_transaccion_importe">Importe:</string>
+    <string name="txt_menu_fecha">Fecha:</string>
+    <string name="txt_menu_estado">Estado:</string>
+    <string name="txt_login_registrate">No tenés tu cuenta? Registrate!</string>
+    <string name="action_register">Registrarse</string>
+    <string name="action_agregar_transaccion">Agregar transaccion</string>
+    <string name="action_ver_transacciones">Transacciones</string>
+</resources>

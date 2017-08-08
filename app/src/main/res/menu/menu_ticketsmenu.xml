@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/ver_transacciones_item"
+        android:title="@string/action_ver_transacciones"
+        android:icon="@drawable/ic_action_ver_transacciones"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/deslogear_item"
+        android:title="@string/action_logout"
+        android:icon="@drawable/ic_action_deslogear"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/salir_item"
+        android:title="@string/action_close"
+        android:icon="@drawable/ic_action_close_2"
+        app:showAsAction="always"
+        />
+
+</menu>

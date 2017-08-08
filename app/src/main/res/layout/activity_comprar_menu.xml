@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.aldebaran.appcomedor.comprarMenu"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="25dp">
+
+    <include
+        android:id="@+id/toolbar_comprarmenu"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:columnCount="2"
+                app:rowCount="4">
+
+                <TextView
+                    android:id="@+id/textView8"
+                    style="@style/Base.TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Fecha:"
+                    app:layout_constraintBottom_toTopOf="@+id/textView11"
+                    app:layout_constraintRight_toRightOf="@+id/textView11"
+                    app:layout_gravity="right"
+                    tools:layout_constraintBottom_creator="1"
+                    tools:layout_constraintRight_creator="1" />
+
+                <TextView
+                    android:id="@+id/txt_fecha_comprarmenu"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="1230-12-12"
+                    app:layout_constraintBottom_toTopOf="@+id/txt_descripcion_comprarmenu"
+                    app:layout_constraintLeft_toLeftOf="@+id/txt_descripcion_comprarmenu"
+                    app:layout_gravity="left"
+                    tools:layout_constraintBottom_creator="1"
+                    tools:layout_constraintLeft_creator="1" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Descripción:"
+                    android:textStyle="bold"
+                    app:layout_constraintRight_toRightOf="@+id/textView9"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_gravity="right"
+                    tools:layout_constraintRight_creator="1"
+                    tools:layout_constraintTop_creator="1" />
+
+                <TextView
+                    android:id="@+id/txt_descripcion_comprarmenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:maxLines="3"
+                    android:text="Esto es una descripcion"
+                    app:layout_constraintBottom_toTopOf="@+id/txt_precio_comprarmenu"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_gravity="left"
+                    tools:layout_constraintBottom_creator="1"
+                    tools:layout_constraintRight_creator="1" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Saldo actual:"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView9"
+                    app:layout_gravity="right"
+                    tools:layout_constraintLeft_creator="1"
+                    tools:layout_constraintTop_creator="1" />
+
+                <TextView
+                    android:id="@+id/txt_saldo_comprarmenu"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="1923,123"
+                    android:textStyle="bold"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/textView10"
+                    app:layout_constraintLeft_toRightOf="@+id/textView10"
+                    app:layout_gravity="left"
+                    tools:layout_constraintBaseline_creator="1"
+                    tools:layout_constraintLeft_creator="1" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Precio: "
+                    app:layout_constraintRight_toRightOf="@+id/textView10"
+                    app:layout_constraintTop_toBottomOf="@+id/textView11"
+                    app:layout_gravity="right"
+                    tools:layout_constraintRight_creator="1"
+                    tools:layout_constraintTop_creator="1" />
+
+                <TextView
+                    android:id="@+id/txt_precio_comprarmenu"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="$123,4"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/txt_saldo_comprarmenu"
+                    app:layout_constraintLeft_toLeftOf="@+id/txt_saldo_comprarmenu"
+                    app:layout_gravity="left"
+                    tools:layout_constraintBottom_creator="1"
+                    tools:layout_constraintLeft_creator="1" />
+            </android.support.v7.widget.GridLayout>
+
+            <Button
+                android:id="@+id/btn_comprarmenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:text="COMPRAR"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:layout_constraintBottom_creator="1"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

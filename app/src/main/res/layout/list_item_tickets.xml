@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_ticket_id_menu"
+        android:visibility="gone"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_ticket_id_usuario"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="96dp"
+        android:src="@drawable/ic_ticket"
+        android:contentDescription="@string/imagen"
+        app:layout_constraintRight_toLeftOf="@+id/txt_ticket_num"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginEnd="8dp"
+        android:id="@+id/imageView2"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_ticket_num"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/textView4"
+        android:layout_marginTop="16dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/textView4"
+        android:id="@+id/textView5" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/txt_ticket_num"
+        android:text="@string/txt_ticket_num"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="16dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="104dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_ticket_fecha"
+        android:textStyle="bold"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_ticket_fecha"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toRightOf="@+id/imageView2"
+        android:layout_marginLeft="8dp"
+        android:id="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/txt_ticket_fecha"
+        android:layout_width="wrap_content"
+        android:text="@string/txt_ticket_fecha"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textStyle="bold"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginTop="9dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toRightOf="@+id/textView5" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_ticket_precio"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txt_ticket_precio"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/txt_ticket_precio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_ticket_precio"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_ticket_fecha"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/txt_ticket_fecha"
+        android:layout_marginLeft="10dp" />
+
+</android.support.constraint.ConstraintLayout>

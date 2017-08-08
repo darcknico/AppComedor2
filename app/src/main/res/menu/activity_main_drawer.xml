@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_refrescar"
+            android:icon="@drawable/ic_action_refrescar"
+            android:title="Refrescar" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_action_logout"
+            android:title="Deslogearse" />
+        <item
+            android:id="@+id/nav_close"
+            android:icon="@drawable/ic_action_close"
+            android:title="Salir" />
+    </group>
+
+</menu>

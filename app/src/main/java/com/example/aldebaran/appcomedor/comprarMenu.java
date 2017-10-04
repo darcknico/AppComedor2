@@ -64,7 +64,7 @@ public class comprarMenu extends AppCompatActivity {
 
     public void obtener_menu(int id){
 
-        Call<RespuestaAPI> call = RestClient.getClient().menuObtener(id);
+        Call<RespuestaAPI> call = RestClient.getClient().menuObtener(token,id);
         call.enqueue(new Callback<RespuestaAPI>() {
             @Override
             public void onResponse(Call<RespuestaAPI> call, Response<RespuestaAPI> response) {
@@ -73,15 +73,11 @@ public class comprarMenu extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     respuesta = response.body();
                     Menu item = gson.fromJson(respuesta.getSalida(),Menu.class);
-                    if(item.getFecha()!=null){
-                        fecha.setText(item.getFecha());
-                    }
+                    fecha.setText(item.getFecha());
                     if(item.getDescripcion()!=null){
                         descripcion.setText(item.getDescripcion());
                     }
-                    if(item.getPrecio()!=null){
-                        precio.setText(item.getPrecio().toString());
-                    }
+                    precio.setText(String.valueOf(item.getPrecio()));
 
                 } else {
                     try {
@@ -118,8 +114,8 @@ public class comprarMenu extends AppCompatActivity {
                     if(item.getSaldo()!=null){
                         saldo.setText(item.getSaldo());
                     }
-                    if(item.getTicketsRestantes()!=null){
-                        tickets_restantes = Integer.parseInt(item.getTicketsRestantes());
+                    if(item.getTickets()!=null){
+                        tickets_restantes = Integer.parseInt(item.getTickets());
                     }
 
                 } else {

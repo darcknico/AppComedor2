@@ -74,12 +74,12 @@ public class TicketsActivity extends AppCompatActivity {
                 if (ticketMenu instanceof Menu){
                     Menu menu = (Menu) ticketMenu;
                     Intent intent = new Intent(getApplicationContext(), comprarMenu.class);
-                    intent.putExtra("idmenu",menu.getIdMenu());
+                    intent.putExtra("idmenu",menu.getId());
                     startActivity(intent);
                 } else {
                     Ticket ticket = (Ticket) ticketMenu;
                     Intent intent = new Intent(getApplicationContext(), verTicket.class);
-                    intent.putExtra("idticket",ticket.getIdTicket());
+                    intent.putExtra("idticket",ticket.getId());
                     startActivity(intent);
                 }
             }
@@ -228,6 +228,7 @@ public class TicketsActivity extends AppCompatActivity {
                             return 0;
                         }
                     });
+                    Collections.reverse(lista);
                     lvTickets.setAdapter(new ticketsAdapter(getApplicationContext(),lista));
                 } else {
                     try {
@@ -280,13 +281,13 @@ public class TicketsActivity extends AppCompatActivity {
             Object item = getItem(position);
 
             if (item instanceof Ticket) {
-                Ticket object = (Ticket) item;
+                Ticket ticket = (Ticket) item;
                 img.setImageResource(R.drawable.ic_ticket);
-                fecha.setText(object.getMenu().getFecha());
-                estado.setText(object.getEstado());
+                fecha.setText(ticket.getFecha());
+                estado.setText(ticket.getCondicion());
             } else {
-                    Menu object = (Menu) item;
-                    fecha.setText(object.getFecha());
+                    Menu menu = (Menu) item;
+                    fecha.setText(menu.getFecha());
                     estado.setText("No comprado");
             }
 

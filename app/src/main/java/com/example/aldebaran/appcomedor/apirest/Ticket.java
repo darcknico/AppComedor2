@@ -1,125 +1,80 @@
 package com.example.aldebaran.appcomedor.apirest;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
-
 /**
  * Created by aldebaran on 28/06/17.
  */
 
-public class Ticket extends ticketMenu implements Serializable {
+public class Ticket extends ticketMenu{
 
-    @SerializedName("idTicket")
-    @Expose
-    private Integer idTicket;
-    @SerializedName("idMenu")
-    @Expose
-    private String idMenu;
-    @SerializedName("idUsuario")
-    @Expose
-    private String idUsuario;
-    @SerializedName("precio")
-    @Expose
-    private String precio;
-    @SerializedName("estado")
-    @Expose
-    private String estado;
-    @SerializedName("creado")
-    @Expose
-    private String creado;
-    @SerializedName("modificado")
-    @Expose
-    private String modificado;
-    @SerializedName("menu")
-    @Expose
+    private int id;
+    private double precio;
+    private String condicion;
+    private String codigo;
+    private int idMenu;
+    private Usuario usuario;
+    private int idUsuario;
     private Menu menu;
+    private String fecha;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public Ticket() {
+    public Ticket(){
+        usuario = new Usuario();
+        menu = new Menu();
     }
 
-    /**
-     *
-     * @param estado
-     * @param idUsuario
-     * @param precio
-     * @param creado
-     * @param menu
-     * @param modificado
-     * @param idMenu
-     * @param idTicket
-     */
-    public Ticket(Integer idTicket, String idMenu, String idUsuario, String precio, String estado, String creado, String modificado, Menu menu) {
-        super();
-        this.idTicket = idTicket;
-        this.idMenu = idMenu;
-        this.idUsuario = idUsuario;
-        this.precio = precio;
-        this.estado = estado;
-        this.creado = creado;
-        this.modificado = modificado;
-        this.menu = menu;
+    public int getId() {
+        return id;
     }
 
-    public Integer getIdTicket() {
-        return idTicket;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setIdTicket(Integer idTicket) {
-        this.idTicket = idTicket;
-    }
-
-    public String getIdMenu() {
-        return idMenu;
-    }
-
-    public void setIdMenu(String idMenu) {
-        this.idMenu = idMenu;
-    }
-
-    public String getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
-    public String getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(String precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 
-    public String getEstado() {
-        return estado;
+    public String getCondicion() {
+        return condicion;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setCondicion(String condicion) {
+        this.condicion = condicion;
     }
 
-    public String getCreado() {
-        return creado;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setCreado(String creado) {
-        this.creado = creado;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
-    public String getModificado() {
-        return modificado;
+    public int getIdMenu() {
+        return idMenu;
     }
 
-    public void setModificado(String modificado) {
-        this.modificado = modificado;
+    public void setIdMenu(int idMenu) {
+        this.idMenu = idMenu;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Menu getMenu() {
@@ -130,4 +85,11 @@ public class Ticket extends ticketMenu implements Serializable {
         this.menu = menu;
     }
 
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
 }

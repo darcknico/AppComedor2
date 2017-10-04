@@ -25,12 +25,14 @@ import android.widget.Toast;
 
 import com.example.aldebaran.appcomedor.apirest.LoginBody;
 import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
+import com.example.aldebaran.appcomedor.apirest.RespuestaToken;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
 import com.example.aldebaran.appcomedor.apirest.Usuario;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -145,56 +147,38 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             // no hay errores con los views del formulario, comienza el intento de logeo
             showProgress(true);
-
-            Call<RespuestaAPI> loginCall = RestClient.getClient().login(new LoginBody(dni,password));
-            loginCall.enqueue(new Callback<RespuestaAPI>() {
+            HashMap<String,Object> body = new HashMap<>();
+            body.put("grant_type","password");
+            body.put("client_id","ClienteAndroid");
+            body.put("username",dni);
+            body.put("password",password);
+            Call<RespuestaToken> loginCall = RestClient.getClient().token(body);
+            loginCall.enqueue(new Callback<RespuestaToken>() {
                 @Override
-                public void onResponse(Call<RespuestaAPI> call, Response<RespuestaAPI> response) {
+                public void onResponse(Call<RespuestaToken> call, Response<RespuestaToken> response) {
                     showProgress(false);
-                    RespuestaAPI respuesta = null;
-
                     if (response.isSuccessful()) {
-                        respuesta = response.body();
-                        Gson gson = new Gson();
-                        Usuario us = gson.fromJson(respuesta.getSalida(), Usuario.class);
 
                         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor prefsEditor = sp.edit();
-                        prefsEditor.putString("token", us.getToken());
-                        prefsEditor.putString("nombre",us.getNombre());
+                        prefsEditor.putString("token",response.body().getToken_type()+" "+response.body().getAccess_token());
                         prefsEditor.commit();
                         finish();
                         Intent intent = new Intent(getApplicationContext(), TicketsActivity.class);
                         startActivity(intent);
 
                     } else {
-                        Gson gson = new Gson();
-                        try {
-                            respuesta = gson.fromJson(response.errorBody().string(),RespuestaAPI.class);
-                            showLoginError(respuesta.getResultado());
-                            if (response.code() == 400){
-                                JsonObject salida = respuesta.getSalida();
-                                if (salida.has("dni")){
-                                    String error= salida.getAsJsonArray("dni").get(0).getAsString();
-                                    mDniView.setError(error);
-                                }
-                                if (salida.has("contraseña")){
-                                    String error = salida.getAsJsonArray("contraseña").get(0).getAsString();
-                                    mPasswordView.setError(error);
-                                }
-                            }
-                        }
-                        catch (IOException e){
-                            e.printStackTrace();
+                        if (response.code() == 401){
+                            showLoginError("La combinacion de la cuenta y password no es correcta");
                         }
                     }
                 }
 
                 @Override
-                public void onFailure(Call<RespuestaAPI> call, Throwable t) {
-                    showLoginError(t.getMessage());
-                    showProgress(false);
+                public void onFailure(Call<RespuestaToken> call, Throwable t) {
+
                 }
+
             });
         }
     }

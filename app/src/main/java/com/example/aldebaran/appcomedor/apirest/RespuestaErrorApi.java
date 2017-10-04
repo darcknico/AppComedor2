@@ -15,7 +15,7 @@ public class RespuestaErrorApi {
     private String resultado;
     @SerializedName("salida")
     @Expose
-    private JsonPrimitive salida;
+    private JsonPrimitive salida = null;
     @SerializedName("numfilas")
     @Expose
     private Integer numfilas;

@@ -1,6 +1,8 @@
 package com.example.aldebaran.appcomedor;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.aldebaran.appcomedor.apirest.Menu;
 import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
+import com.example.aldebaran.appcomedor.apirest.RespuestaErrorApi;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
 import com.example.aldebaran.appcomedor.apirest.Ticket;
 import com.google.gson.Gson;
@@ -38,6 +41,7 @@ public class verTicket extends AppCompatActivity {
     Button btnCancelar;
     private int idTicket;
     Toolbar toolbar;
+    private String token;
 
 
     @Override
@@ -50,6 +54,9 @@ public class verTicket extends AppCompatActivity {
         getSupportActionBar().setTitle("");
         TextView titulo = (TextView) findViewById(R.id.titulo_toolbar);
         titulo.setText("Ver ticket");
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        token = sp.getString("token","");
 
         fecha = (TextView) findViewById(R.id.txt_fecha_verticket);
         descripcion = (TextView) findViewById(R.id.txt_descripcion_verticket);
@@ -95,7 +102,7 @@ public class verTicket extends AppCompatActivity {
     }
     public void obtener_ticket(int id){
 
-        Call<RespuestaAPI> call = RestClient.getClient().ticketObtener(id);
+        Call<RespuestaAPI> call = RestClient.getClient().ticketObtener(token,id);
         call.enqueue(new Callback<RespuestaAPI>() {
             @Override
             public void onResponse(Call<RespuestaAPI> call, Response<RespuestaAPI> response) {
@@ -105,8 +112,8 @@ public class verTicket extends AppCompatActivity {
                     respuesta = response.body();
                     Ticket item = gson.fromJson(respuesta.getSalida(),Ticket.class);
 
-                    if(item.getEstado()!=null){
-                        estado.setText(item.getEstado());
+                    if(item.getCondicion()!=null){
+                        estado.setText(item.getCondicion());
                     }
                     if(item.getMenu().getFecha()!=null){
                         fecha.setText(item.getMenu().getFecha());
@@ -114,7 +121,7 @@ public class verTicket extends AppCompatActivity {
                     if(item.getMenu().getDescripcion()!=null){
                         descripcion.setText(item.getMenu().getDescripcion().toString());
                     }
-                    if (TextUtils.equals(estado.getText().toString(),"Cancelado")) {
+                    if (TextUtils.equals(estado.getText().toString(),"Cancelado") || TextUtils.equals(estado.getText().toString(),"Usado")) {
                         btnCancelar.setVisibility(View.INVISIBLE);
                     } else {
                         btnCancelar.setOnClickListener(new View.OnClickListener() {
@@ -126,12 +133,8 @@ public class verTicket extends AppCompatActivity {
                     }
                 } else {
                     try {
-                        respuesta = gson.fromJson(response.errorBody().string(),RespuestaAPI.class);
-                        showResultado(respuesta.getResultado());
-                        if (response.code() == 400) {
-                        } else if(respuesta.getSalida() != null){
-                            showResultado(respuesta.getSalida().getAsString());
-                        }
+                        RespuestaErrorApi resp = gson.fromJson(response.errorBody().string(), RespuestaErrorApi.class);
+                        showResultado(resp.getResultado());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -147,7 +150,7 @@ public class verTicket extends AppCompatActivity {
 
     public void eliminar_ticket(){
 
-        Call<RespuestaAPI> call = RestClient.getClient().ticketEliminar(idTicket);
+        Call<RespuestaAPI> call = RestClient.getClient().ticketEliminar(token,idTicket);
         call.enqueue(new Callback<RespuestaAPI>() {
             @Override
             public void onResponse(Call<RespuestaAPI> call, Response<RespuestaAPI> response) {

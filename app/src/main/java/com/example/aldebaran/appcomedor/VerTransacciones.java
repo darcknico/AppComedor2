@@ -59,7 +59,7 @@ public class VerTransacciones extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Transaccion transaccion = (Transaccion) parent.getAdapter().getItem(position);
-                Toast.makeText(getApplicationContext(),"Falta para la jiunsa"+transaccion.getIdTransaccion(),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Falta para la jiunsa"+transaccion.getId(),Toast.LENGTH_LONG).show();
 
                 /*Intent intent = new Intent(getApplicationContext(), comprarMenu.class);
                 intent.putExtra("idmenu",menu.getIdMenu());
@@ -167,7 +167,7 @@ public class VerTransacciones extends AppCompatActivity {
             // Lead actual.
             Transaccion item = getItem(position);
 
-            fecha.setText(item.getFecha());
+            fecha.setText(item.getFecha_acreditacion());
             importe.setText(""+item.getMonto());
             concepto.setText(item.getConcepto());
 

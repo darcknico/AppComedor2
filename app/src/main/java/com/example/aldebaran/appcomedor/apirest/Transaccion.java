@@ -8,70 +8,33 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Transaccion {
-    @SerializedName("idTransaccion")
-    @Expose
-    private Integer idTransaccion;
-    @SerializedName("idUsuario")
-    @Expose
-    private Integer idUsaurio;
-    @SerializedName("concepto")
-    @Expose
+    private int id;
+    private int idUsuario;
     private String concepto;
-    @SerializedName("monto")
-    @Expose
-    private Double monto;
-    @SerializedName("fecha")
-    @Expose
-    private String fecha;
-    @SerializedName("creado")
-    @Expose
-    private String creado;
-    @SerializedName("modificado")
-    @Expose
-    private String modificado;
+    private String token;
+    private String monto;
+    private String estado_transaccion;
+    private String fecha_acreditacion;
+    private String paymentMethodId;
+    private String cardIssuerId;
+    private String installment;
+    private String cardToken;
+    private String campaignId;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public Transaccion() {
+    public int getId() {
+        return id;
     }
 
-    /**
-     *
-     * @param concepto
-     * @param fecha
-     * @param creado
-     * @param idTransaccion
-     * @param modificado
-     * @param idUsaurio
-     * @param monto
-     */
-    public Transaccion(Integer idTransaccion, Integer idUsaurio, String concepto, Double monto, String fecha, String creado, String modificado) {
-        super();
-        this.idTransaccion = idTransaccion;
-        this.idUsaurio = idUsaurio;
-        this.concepto = concepto;
-        this.monto = monto;
-        this.fecha = fecha;
-        this.creado = creado;
-        this.modificado = modificado;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public Integer getIdTransaccion() {
-        return idTransaccion;
+    public int getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setIdTransaccion(Integer idTransaccion) {
-        this.idTransaccion = idTransaccion;
-    }
-
-    public Integer getIdUsaurio() {
-        return idUsaurio;
-    }
-
-    public void setIdUsaurio(Integer idUsaurio) {
-        this.idUsaurio = idUsaurio;
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getConcepto() {
@@ -82,35 +45,75 @@ public class Transaccion {
         this.concepto = concepto;
     }
 
-    public Double getMonto() {
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getMonto() {
         return monto;
     }
 
-    public void setMonto(Double monto) {
+    public void setMonto(String monto) {
         this.monto = monto;
     }
 
-    public String getFecha() {
-        return fecha;
+    public String getEstado_transaccion() {
+        return estado_transaccion;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public void setEstado_transaccion(String estado_transaccion) {
+        this.estado_transaccion = estado_transaccion;
     }
 
-    public String getCreado() {
-        return creado;
+    public String getFecha_acreditacion() {
+        return fecha_acreditacion;
     }
 
-    public void setCreado(String creado) {
-        this.creado = creado;
+    public void setFecha_acreditacion(String fecha_acreditacion) {
+        this.fecha_acreditacion = fecha_acreditacion;
     }
 
-    public String getModificado() {
-        return modificado;
+    public String getPaymentMethodId() {
+        return paymentMethodId;
     }
 
-    public void setModificado(String modificado) {
-        this.modificado = modificado;
+    public void setPaymentMethodId(String paymentMethodId) {
+        this.paymentMethodId = paymentMethodId;
+    }
+
+    public String getCardIssuerId() {
+        return cardIssuerId;
+    }
+
+    public void setCardIssuerId(String cardIssuerId) {
+        this.cardIssuerId = cardIssuerId;
+    }
+
+    public String getInstallment() {
+        return installment;
+    }
+
+    public void setInstallment(String installment) {
+        this.installment = installment;
+    }
+
+    public String getCardToken() {
+        return cardToken;
+    }
+
+    public void setCardToken(String cardToken) {
+        this.cardToken = cardToken;
+    }
+
+    public String getCampaignId() {
+        return campaignId;
+    }
+
+    public void setCampaignId(String campaignId) {
+        this.campaignId = campaignId;
     }
 }

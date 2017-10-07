@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.example.aldebaran.appcomedor.apirest.RegisterBody;
 import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
-import com.example.aldebaran.appcomedor.apirest.Usuario;
+import com.example.aldebaran.appcomedor.modelos.Usuario;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -33,11 +33,12 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    TextView acountTextView;
-    TextView nameTextView;
-    TextView passwordTextView;
-    Toolbar toolbar;
-    View progressBar;
+    private TextView acountTextView;
+    private TextView nameTextView;
+    private TextView surnameTextView;
+    private TextView passwordTextView;
+    private Toolbar toolbar;
+    private View progressBar;
 //    View registerFormView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         acountTextView = (TextView) findViewById(R.id.RegisterAcountTextView);
         nameTextView = (TextView) findViewById(R.id.RegisterNameTextView);
         passwordTextView = (TextView) findViewById(R.id.RegisterPasswordEditText);
+        surnameTextView = (TextView) findViewById(R.id.RegisterSurnameTextView);
 
         //registerFormView = findViewById(R.id.register_form);
         progressBar = findViewById(R.id.RegisterProgressBar);
@@ -133,11 +135,17 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean registrar(){
         showProgress(true);
+        Usuario usuario = new Usuario();
         String acount = acountTextView.getText().toString();
         String name = nameTextView.getText().toString();
         String password = passwordTextView.getText().toString();
+        String surname = surnameTextView.getText().toString();
+        usuario.setDni(acount);
+        usuario.setNombre(name);
+        usuario.setContraseña(password);
+        usuario.setApellido(surname);
 
-        Call<RespuestaAPI> registerCall = RestClient.getClient().register(new RegisterBody(acount,name,password));
+        Call<RespuestaAPI> registerCall = RestClient.getClient().register(usuario);
         registerCall.enqueue(new Callback<RespuestaAPI>() {
             @Override
             public void onResponse(Call<RespuestaAPI> call, Response<RespuestaAPI> response) {

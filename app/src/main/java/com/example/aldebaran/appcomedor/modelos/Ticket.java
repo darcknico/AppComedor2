@@ -1,10 +1,10 @@
-package com.example.aldebaran.appcomedor.apirest;
+package com.example.aldebaran.appcomedor.modelos;
 
 /**
  * Created by aldebaran on 28/06/17.
  */
 
-public class Ticket extends ticketMenu{
+public class Ticket extends TicketMenu {
 
     private int id;
     private double precio;

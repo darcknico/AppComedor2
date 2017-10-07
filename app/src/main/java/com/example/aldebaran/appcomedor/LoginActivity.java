@@ -23,15 +23,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aldebaran.appcomedor.apirest.LoginBody;
-import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
 import com.example.aldebaran.appcomedor.apirest.RespuestaToken;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
-import com.example.aldebaran.appcomedor.apirest.Usuario;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -164,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                         prefsEditor.putString("token",response.body().getToken_type()+" "+response.body().getAccess_token());
                         prefsEditor.commit();
                         finish();
-                        Intent intent = new Intent(getApplicationContext(), TicketsActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                         startActivity(intent);
 
                     } else {

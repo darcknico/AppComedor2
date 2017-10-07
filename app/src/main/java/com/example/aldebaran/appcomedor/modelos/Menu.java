@@ -1,11 +1,11 @@
-package com.example.aldebaran.appcomedor.apirest;
+package com.example.aldebaran.appcomedor.modelos;
 
 
 /**
  * Created by aldebaran on 28/06/17.
  */
 
-public class Menu extends ticketMenu{
+public class Menu extends TicketMenu {
     private int id;
     private String fecha;
     private String descripcion;

@@ -20,16 +20,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aldebaran.appcomedor.LoginActivity;
-import com.example.aldebaran.appcomedor.R;
-import com.example.aldebaran.appcomedor.VerTransacciones;
-import com.example.aldebaran.appcomedor.apirest.Menu;
+import com.example.aldebaran.appcomedor.modelos.Menu;
 import com.example.aldebaran.appcomedor.apirest.RespuestaListaAPI;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
-import com.example.aldebaran.appcomedor.apirest.Ticket;
-import com.example.aldebaran.appcomedor.apirest.ticketMenu;
-import com.example.aldebaran.appcomedor.comprarMenu;
-import com.example.aldebaran.appcomedor.verTicket;
+import com.example.aldebaran.appcomedor.modelos.Ticket;
+import com.example.aldebaran.appcomedor.modelos.TicketMenu;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -70,14 +65,14 @@ public class TicketsActivity extends AppCompatActivity {
         lvTickets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ticketMenu ticketMenu = (ticketMenu) parent.getAdapter().getItem(position);
-                if (ticketMenu instanceof Menu){
-                    Menu menu = (Menu) ticketMenu;
+                TicketMenu TicketMenu = (TicketMenu) parent.getAdapter().getItem(position);
+                if (TicketMenu instanceof Menu){
+                    Menu menu = (Menu) TicketMenu;
                     Intent intent = new Intent(getApplicationContext(), comprarMenu.class);
                     intent.putExtra("idmenu",menu.getId());
                     startActivity(intent);
                 } else {
-                    Ticket ticket = (Ticket) ticketMenu;
+                    Ticket ticket = (Ticket) TicketMenu;
                     Intent intent = new Intent(getApplicationContext(), verTicket.class);
                     intent.putExtra("idticket",ticket.getId());
                     startActivity(intent);
@@ -171,12 +166,12 @@ public class TicketsActivity extends AppCompatActivity {
                     respuesta = response.body();
                     Type listType = new TypeToken<List<Menu>>() {}.getType();
                     List<Menu> listaMenu = gson.fromJson(respuesta.getSalida(),listType);
-                    ArrayList<ticketMenu> lista = new ArrayList<ticketMenu>();
+                    ArrayList<TicketMenu> lista = new ArrayList<TicketMenu>();
                     for (Menu menu:listaMenu) {
-                        lista.add((ticketMenu)menu);
+                        lista.add((TicketMenu)menu);
                     }
                     for (Ticket ticket:ticketList) {
-                        lista.add((ticketMenu)ticket);
+                        lista.add((TicketMenu)ticket);
                     }
                     Collections.sort(lista, new Comparator<Object>() {
                         @Override
@@ -253,9 +248,9 @@ public class TicketsActivity extends AppCompatActivity {
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
 
-    public class ticketsAdapter extends ArrayAdapter<ticketMenu>{
+    public class ticketsAdapter extends ArrayAdapter<TicketMenu>{
 
-        public ticketsAdapter(@NonNull Context context, @NonNull List<ticketMenu> objects) {
+        public ticketsAdapter(@NonNull Context context, @NonNull List<TicketMenu> objects) {
             super(context, 0, objects);
         }
 

@@ -1,4 +1,4 @@
-package com.example.aldebaran.appcomedor.apirest;
+package com.example.aldebaran.appcomedor.modelos;
 
 /**
  * Created by karen on 25/6/2017.
@@ -7,13 +7,14 @@ package com.example.aldebaran.appcomedor.apirest;
 public class Usuario {
 
     private int id;
-    private int dni;
+    private String dni;
     private String nombre;
     private String apellido;
     private String token;
     private String saldo;
     private String tickets;
     private String condicion;
+    private String contraseña;
 
     public int getId() {
         return id;
@@ -23,11 +24,11 @@ public class Usuario {
         this.id = id;
     }
 
-    public int getDni() {
+    public String getDni() {
         return dni;
     }
 
-    public void setDni(int dni) {
+    public void setDni(String dni) {
         this.dni = dni;
     }
 
@@ -77,5 +78,13 @@ public class Usuario {
 
     public void setCondicion(String condicion) {
         this.condicion = condicion;
+    }
+
+    public String getContraseña() {
+        return contraseña;
+    }
+
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
     }
 }

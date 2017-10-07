@@ -31,7 +31,8 @@
         <activity android:name=".comprarMenu" />
         <activity android:name=".verTicket" />
         <activity android:name=".crearTransaccion" />
-        <activity android:name=".VerTransacciones"></activity>
+        <activity android:name=".VerTransacciones" />
+        <activity android:name=".HomeActivity"></activity>
     </application>
 
 </manifest>

@@ -1,13 +1,14 @@
 package com.example.aldebaran.appcomedor.apirest;
 
+import com.example.aldebaran.appcomedor.modelos.Transaccion;
+import com.example.aldebaran.appcomedor.modelos.Usuario;
+
 import java.util.HashMap;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -37,7 +38,7 @@ public interface ApiRest {
 
     @Headers("Content-Type: application/json")
     @POST("registrar")
-    Call<RespuestaAPI> register(@Body RegisterBody registerBody);
+    Call<RespuestaAPI> register(@Body Usuario usuario);
 
     //OBTENER LISTA DE MENUS PARA COMPRAR DE SU TICKETS
     @Headers( "Content-Type: application/json" )

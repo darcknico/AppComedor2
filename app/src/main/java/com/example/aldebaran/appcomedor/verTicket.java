@@ -13,17 +13,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aldebaran.appcomedor.apirest.Menu;
 import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
 import com.example.aldebaran.appcomedor.apirest.RespuestaErrorApi;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
-import com.example.aldebaran.appcomedor.apirest.Ticket;
+import com.example.aldebaran.appcomedor.modelos.Ticket;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package com.example.aldebaran.appcomedor.apirest;
+package com.example.aldebaran.appcomedor.modelos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

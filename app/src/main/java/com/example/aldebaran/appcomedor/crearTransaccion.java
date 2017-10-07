@@ -16,14 +16,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aldebaran.appcomedor.apirest.CrearTransaccionBody;
 import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
 import com.example.aldebaran.appcomedor.apirest.RespuestaErrorApi;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
-import com.example.aldebaran.appcomedor.apirest.Transaccion;
+import com.example.aldebaran.appcomedor.modelos.Transaccion;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.zxing.common.StringUtils;
 import com.mercadopago.constants.PaymentMethods;
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.constants.Sites;

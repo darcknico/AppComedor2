@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.example.aldebaran.appcomedor.apirest.RespuestaListaAPI;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
-import com.example.aldebaran.appcomedor.apirest.Transaccion;
+import com.example.aldebaran.appcomedor.modelos.Transaccion;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

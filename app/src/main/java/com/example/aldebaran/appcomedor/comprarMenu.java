@@ -10,13 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aldebaran.appcomedor.apirest.Menu;
+import com.example.aldebaran.appcomedor.modelos.Menu;
 import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
 import com.example.aldebaran.appcomedor.apirest.RespuestaErrorApi;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
-import com.example.aldebaran.appcomedor.apirest.Usuario;
+import com.example.aldebaran.appcomedor.modelos.Usuario;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import java.io.IOException;
 

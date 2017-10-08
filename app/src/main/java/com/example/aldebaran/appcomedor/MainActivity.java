@@ -8,6 +8,9 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -30,6 +33,8 @@ import com.example.aldebaran.appcomedor.adapter.TicketMenuAdapter;
 import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
 import com.example.aldebaran.appcomedor.apirest.RespuestaListaAPI;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
+import com.example.aldebaran.appcomedor.fragment.HomeFragment;
+import com.example.aldebaran.appcomedor.fragment.ListaFragment;
 import com.example.aldebaran.appcomedor.modelos.Ticket;
 import com.example.aldebaran.appcomedor.modelos.TicketMenu;
 import com.example.aldebaran.appcomedor.modelos.Usuario;
@@ -48,12 +53,9 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    //content main
     private CoordinatorLayout coordinatorLayout;
-    private TextView homeNombreUsuario,homeTicketUsuario,homeSaldoUsuario,homeDocumentoUsuario,homeEstadoUsuario;
-    private RecyclerView homeRecyclerView;
-    private TicketMenuAdapter adapter;
-    private ArrayList<TicketMenu> listaTicketMenu;
+
+    private NavigationView navigationView;
 
     //nav header
     private TextView mainNombreUsuario;
@@ -74,9 +76,9 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        drawer.closeDrawer(GravityCompat.START);
+        displaySelectedScreen(R.id.nav_home);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -84,29 +86,12 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         token = sp.getString("token","");
 
-        //content main
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        homeNombreUsuario = (TextView) findViewById(R.id.homeNombreUsuario);
-        homeTicketUsuario = (TextView) findViewById(R.id.homeTicketUsuario);
-        homeSaldoUsuario = (TextView) findViewById(R.id.homeSaldoUsuario);
-        homeDocumentoUsuario = (TextView) findViewById(R.id.homeDocumentoUsuario);
-        homeEstadoUsuario = (TextView) findViewById(R.id.homeEstadoUsuario);
-        homeRecyclerView = (RecyclerView) findViewById(R.id.homeRecyclerView);
         //nav header
         mainNombreUsuario = (TextView) headerView.findViewById(R.id.mainNombreUsuario);
         mainImageUsuario = (ImageView) headerView.findViewById(R.id.mainImageUsuario);
 
         actualizarUsuario();
-
-        listaTicketMenu = new ArrayList<TicketMenu>();
-        adapter = new TicketMenuAdapter(this,listaTicketMenu);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, OrientationHelper.VERTICAL, false);
-        homeRecyclerView.setLayoutManager(linearLayoutManager);
-        homeRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        homeRecyclerView.setAdapter(adapter);
-
-        obtenerMenus();
-        obtenerTickets();
 
     }
 
@@ -125,15 +110,10 @@ public class MainActivity extends AppCompatActivity
                 if (response.isSuccessful()) {
                     if(!response.body().getSalida().isJsonArray()) {
                         Usuario item = gson.fromJson(response.body().getSalida(), Usuario.class);
-                        homeNombreUsuario.setText(item.getNombre() + " " + item.getApellido());
-                        homeDocumentoUsuario.setText(item.getDni());
-                        homeEstadoUsuario.setText(item.getCondicion());
-                        homeSaldoUsuario.setText(item.getSaldo());
-                        homeTicketUsuario.setText(item.getTickets());
 
                         mainNombreUsuario.setText(item.getNombre() + " " + item.getApellido());
                     } else {
-                        homeNombreUsuario.setText("ADMINISTRADOR");
+                        mainNombreUsuario.setText("ADMINISTRADOR");
                     }
                 } else {
                     if (response.code() == 401) {
@@ -150,69 +130,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void obtenerTickets(){
-        Call<RespuestaListaAPI> call = RestClient.getClient().ticketLista(token);
-        call.enqueue(new Callback<RespuestaListaAPI>() {
-            @Override
-            public void onResponse(Call<RespuestaListaAPI> call, Response<RespuestaListaAPI> response) {
-                RespuestaListaAPI respuesta = null;
-                Gson gson = new Gson();
-                if (response.isSuccessful()) {
-                    respuesta = response.body();
-                    Type listType = new TypeToken<List<Ticket>>() {}.getType();
-                    List<Ticket> lista = gson.fromJson(respuesta.getSalida(),listType);
-                    if(lista.size()>0) {
-                        Ticket ticket = lista.get(0);
-                        ticket.setTipo(TicketMenu.TICKET_TYPE);
-                        listaTicketMenu.add(ticket);
-                    } else {
-                        TicketMenu ticket = new TicketMenu();
-                        ticket.setInfo("No tiene tickets");
-                        listaTicketMenu.add(ticket);
-                    }
-                    adapter.notifyDataSetChanged();
-                } else {
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RespuestaListaAPI> call, Throwable t) {
-            }
-        });
-    }
-
-    void obtenerMenus(){
-        Call<RespuestaListaAPI> call = RestClient.getClient().menuLista(token);
-        call.enqueue(new Callback<RespuestaListaAPI>() {
-            @Override
-            public void onResponse(Call<RespuestaListaAPI> call, Response<RespuestaListaAPI> response) {
-                RespuestaListaAPI respuesta = null;
-                Gson gson = new Gson();
-                if (response.isSuccessful()) {
-                    respuesta = response.body();
-                    Type listType = new TypeToken<List<com.example.aldebaran.appcomedor.modelos.Menu>>() {}.getType();
-                    List<com.example.aldebaran.appcomedor.modelos.Menu> lista= gson.fromJson(respuesta.getSalida(),listType);
-                    if(lista.size()>0) {
-                        com.example.aldebaran.appcomedor.modelos.Menu menu = lista.get(0);
-                        menu.setTipo(TicketMenu.MENU_TYPE);
-                        listaTicketMenu.add(menu);
-                    } else {
-                        TicketMenu ticket = new TicketMenu();
-                        ticket.setInfo("No hay menus nuevos");
-                        listaTicketMenu.add(ticket);
-                    }
-                    adapter.notifyDataSetChanged();
-                } else {
-                    if (response.code() == 401) {
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RespuestaListaAPI> call, Throwable t) {
-            }
-        });
-    }
 
     @Override
     public void onBackPressed() {
@@ -220,7 +137,8 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            navigationView.getMenu().getItem(0).setChecked(true);
+            displaySelectedScreen(R.id.nav_home);
         }
     }
 
@@ -236,25 +154,43 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void displaySelectedScreen(int id){
+        Fragment fragment = null;
+        switch (id){
+            case R.id.nav_home:
+                fragment = new HomeFragment();
+                break;
+            case R.id.nav_menu:
+                fragment = new ListaFragment().setOption(ListaFragment.MENU);
+                break;
+            case R.id.nav_ticket:
+                fragment = new ListaFragment().setOption(ListaFragment.TICKET);
+                break;
+            case R.id.nav_logout:
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                sp.edit().clear().apply();
+                finish();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_close:
+                finish();
+                break;
+        }
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_refrescar) {
-            // Handle the camera action
-        } else if (id == R.id.nav_logout) {
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            sp.edit().clear().apply();
-            finish();
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_close) {
-
-
-        }
+        displaySelectedScreen(item.getItemId());
         return true;
     }
 }

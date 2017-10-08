@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 public class TicketMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
     private ArrayList<TicketMenu> lista;
+    private View.OnClickListener ticketItemClickListener = null,menuItemClickListener= null,emptyItemClickListener= null;
 
     public class TicketViewHolder extends RecyclerView.ViewHolder{
         public TextView ticketFechaCard;
@@ -58,6 +60,7 @@ public class TicketMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             emptyInfoCard = (TextView) view.findViewById(R.id.emptyInfoCard);
             emptyImageCard = (ImageView) view.findViewById(R.id.emptyImageCard);
         }
+
     }
 
     public TicketMenuAdapter(Context mContext, ArrayList<TicketMenu> lista){
@@ -97,14 +100,23 @@ public class TicketMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     Ticket ticket = (Ticket)object;
                     ((TicketViewHolder) holder).ticketEstadoCard.setText(ticket.getCondicion());
                     ((TicketViewHolder) holder).ticketFechaCard.setText(ticket.getFecha());
+                    if(ticketItemClickListener!=null) {
+                        ((TicketViewHolder) holder).ticketImageCard.setOnClickListener(this.ticketItemClickListener);
+                    }
                     break;
                 case TicketMenu.MENU_TYPE:
                     Menu menu = (Menu)object;
                     ((MenuViewHolder) holder).menuPrecioCard.setText(String.valueOf(menu.getPrecio()));
                     ((MenuViewHolder) holder).menuFechaCard.setText(menu.getFecha());
+                    if(menuItemClickListener!=null) {
+                        ((MenuViewHolder) holder).menuImageCard.setOnClickListener(this.menuItemClickListener);
+                    }
                     break;
                 case TicketMenu.EMPTY_TYPE:
                     ((EmptyViewHolder) holder).emptyInfoCard.setText(object.getInfo());
+                    if(emptyItemClickListener!=null) {
+                        ((EmptyViewHolder) holder).emptyImageCard.setOnClickListener(this.emptyItemClickListener);
+                    }
                     break;
             }
         }
@@ -115,4 +127,22 @@ public class TicketMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return lista.size();
     }
 
+
+    public void removeAt(int position) {
+        lista.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, lista.size());
+    }
+
+    public void setTicketItemClickListener(View.OnClickListener ticketItemClickListener) {
+        this.ticketItemClickListener = ticketItemClickListener;
+    }
+
+    public void setMenuItemClickListener(View.OnClickListener menuItemClickListener) {
+        this.menuItemClickListener = menuItemClickListener;
+    }
+
+    public void setEmptyItemClickListener(View.OnClickListener emptyItemClickListener) {
+        this.emptyItemClickListener = emptyItemClickListener;
+    }
 }

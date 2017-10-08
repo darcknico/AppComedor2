@@ -14,7 +14,7 @@
     android:weightSum="1">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/mainImageUsuario"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_weight="0.21"
@@ -30,7 +30,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/txt_nombre_navbar"
+        android:id="@+id/mainNombreUsuario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nombre" />

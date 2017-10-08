@@ -3,6 +3,14 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_menu"
+            android:icon="@drawable/ic_menu"
+            android:title="Reservar Menu" />
+        <item
+            android:id="@+id/nav_ticket"
+            android:icon="@drawable/ic_receipt_white_24dp"
+            android:title="Mis Tickets" />
+        <item
             android:id="@+id/nav_refrescar"
             android:icon="@drawable/ic_action_refrescar"
             android:title="Refrescar" />

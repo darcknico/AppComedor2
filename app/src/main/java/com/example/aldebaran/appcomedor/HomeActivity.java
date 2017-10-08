@@ -92,7 +92,7 @@ public class HomeActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if(!response.body().getSalida().isJsonArray()) {
                         Usuario item = gson.fromJson(response.body().getSalida(), Usuario.class);
-                        homeSaldoUsuario.setText(item.getNombre() + " " + item.getApellido());
+                        homeNombreUsuario.setText(item.getNombre() + " " + item.getApellido());
                         homeDocumentoUsuario.setText(item.getDni());
                         homeEstadoUsuario.setText(item.getCondicion());
                         homeSaldoUsuario.setText(item.getSaldo());

@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             if(token != null){
                 sp.edit().apply();
                 finish();
-                Intent i = new Intent(getApplicationContext(), TicketsActivity.class);
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
             }
         }
@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                         prefsEditor.putString("token",response.body().getToken_type()+" "+response.body().getAccess_token());
                         prefsEditor.commit();
                         finish();
-                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
 
                     } else {

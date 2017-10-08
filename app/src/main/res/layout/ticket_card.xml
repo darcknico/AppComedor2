@@ -1,68 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/layaout_card_padding">
+    android:padding="@dimen/layaout_card_padding"
+    app:cardElevation="@dimen/cardElevation"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="@dimen/card_contentPadding">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardElevation="@dimen/cardElevation"
-        app:cardUseCompatPadding="true"
-        app:contentPadding="@dimen/card_contentPadding">
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textView20"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="FECHA:" />
-
-                    <TextView
-                        android:id="@+id/ticketFechaCard"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="DD/MM" />
-                </LinearLayout>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/ticketEstadoCard"
-                    android:layout_width="match_parent"
+                    android:id="@+id/textView20"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:text="ESTADO"
-                    android:textAlignment="center" />
+                    android:layout_weight="1"
+                    android:text="FECHA:" />
 
+                <TextView
+                    android:id="@+id/ticketFechaCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="DD/MM" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/ticketImageCard"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:adjustViewBounds="false"
-                android:cropToPadding="false"
-                android:scaleType="center"
-                app:srcCompat="@drawable/ic_action_refrescar" />
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/ticketEstadoCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="ESTADO"
+                android:textAlignment="center" />
 
-</LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ticketImageCard"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_action_refrescar" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

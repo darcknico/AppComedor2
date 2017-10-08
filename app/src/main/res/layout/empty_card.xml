@@ -1,44 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/layaout_card_padding">
+    android:padding="@dimen/layaout_card_padding"
+    app:cardElevation="@dimen/cardElevation"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="@dimen/card_contentPadding">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardElevation="@dimen/cardElevation"
-        app:cardUseCompatPadding="true"
-        app:contentPadding="@dimen/card_contentPadding">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/emptyImageCard"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/mpsdk_ic_refresh" />
 
-            <ImageView
-                android:id="@+id/emptyImageCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="false"
-                android:cropToPadding="false"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/mpsdk_ic_refresh" />
-
-            <TextView
-                android:id="@+id/emptyInfoCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:padding="5dp"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp"
-                android:text="TextView"
-                android:textAlignment="center" />
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-
-</LinearLayout>
+        <TextView
+            android:id="@+id/emptyInfoCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="TextView"
+            android:textAlignment="center" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

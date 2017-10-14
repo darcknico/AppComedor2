@@ -6,7 +6,6 @@
     android:layout_marginBottom="@dimen/card_layout_margin"
     android:layout_marginLeft="@dimen/card_layout_margin"
     android:layout_marginRight="@dimen/card_layout_margin"
-    android:padding="@dimen/layaout_card_padding"
     app:cardElevation="@dimen/cardElevation"
     app:contentPadding="@dimen/card_contentPadding">
 
@@ -14,6 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/transaccionImageCard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_action_refrescar" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -31,10 +40,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Ticket:" />
+                    android:text="Creado:  " />
 
                 <TextView
-                    android:id="@+id/ticketFechaCard"
+                    android:id="@+id/transaccionFechaCreadoCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="DD/MM" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView21"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Aprobado:  " />
+
+                <TextView
+                    android:id="@+id/transaccionFechaAprobadoCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -42,23 +71,15 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/ticketEstadoCard"
+                android:id="@+id/transaccionMontoCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4dp"
-                android:text="ESTADO"
+                android:text="PRECIO"
                 android:textAlignment="center" />
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/ticketImageCard"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:adjustViewBounds="false"
-            android:cropToPadding="false"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_action_refrescar" />
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

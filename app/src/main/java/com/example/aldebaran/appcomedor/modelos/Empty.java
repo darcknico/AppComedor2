@@ -2,25 +2,19 @@ package com.example.aldebaran.appcomedor.modelos;
 
 import android.view.View;
 
-import java.util.Date;
-
 /**
- * Created by aldebaran on 28/06/17.
+ * Created by karen on 13/10/2017.
  */
 
-public class TicketMenu {
+public class Empty {
 
-    public static final int TICKET_TYPE=1;
-    public static final int MENU_TYPE=2;
+    public static final int TRANSACCION_TYPE=1;
     public static final int EMPTY_TYPE=0;
 
     private int tipo = EMPTY_TYPE;
     private String info;
 
     private View.OnClickListener listener = null;
-
-    public TicketMenu() {
-    }
 
     public int getTipo() {
         return tipo;

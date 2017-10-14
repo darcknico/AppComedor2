@@ -1,11 +1,13 @@
 package com.example.aldebaran.appcomedor.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +16,11 @@ import com.example.aldebaran.appcomedor.modelos.Menu;
 import com.example.aldebaran.appcomedor.modelos.Ticket;
 import com.example.aldebaran.appcomedor.modelos.TicketMenu;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by karen on 6/10/2017.
@@ -23,14 +29,13 @@ import java.util.ArrayList;
 public class TicketMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
     private ArrayList<TicketMenu> lista;
-    private View.OnClickListener ticketItemClickListener = null,menuItemClickListener= null,emptyItemClickListener= null;
 
-    public class TicketViewHolder extends RecyclerView.ViewHolder{
-        public TextView ticketFechaCard;
-        public TextView ticketEstadoCard;
-        public ImageView ticketImageCard;
+    private class TicketViewHolder extends RecyclerView.ViewHolder{
+        private TextView ticketFechaCard;
+        private TextView ticketEstadoCard;
+        private ImageView ticketImageCard;
 
-        public TicketViewHolder(View view){
+        private TicketViewHolder(View view){
             super(view);
             ticketFechaCard = (TextView) view.findViewById(R.id.ticketFechaCard);
             ticketEstadoCard = (TextView) view.findViewById(R.id.ticketEstadoCard);
@@ -38,12 +43,12 @@ public class TicketMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public class MenuViewHolder extends RecyclerView.ViewHolder{
-        public TextView menuFechaCard;
-        public TextView menuPrecioCard;
-        public ImageView menuImageCard;
+    private class MenuViewHolder extends RecyclerView.ViewHolder{
+        private TextView menuFechaCard;
+        private TextView menuPrecioCard;
+        private ImageView menuImageCard;
 
-        public MenuViewHolder(View view){
+        private MenuViewHolder(View view){
             super(view);
             menuFechaCard = (TextView) view.findViewById(R.id.menuFechaCard);
             menuPrecioCard = (TextView) view.findViewById(R.id.menuPrecioCard);
@@ -51,11 +56,11 @@ public class TicketMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public class EmptyViewHolder extends RecyclerView.ViewHolder{
-        public TextView emptyInfoCard;
-        public ImageView emptyImageCard;
+    private class EmptyViewHolder extends RecyclerView.ViewHolder{
+        private TextView emptyInfoCard;
+        private ImageView emptyImageCard;
 
-        public EmptyViewHolder(View view){
+        private EmptyViewHolder(View view){
             super(view);
             emptyInfoCard = (TextView) view.findViewById(R.id.emptyInfoCard);
             emptyImageCard = (ImageView) view.findViewById(R.id.emptyImageCard);
@@ -99,23 +104,43 @@ public class TicketMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 case TicketMenu.TICKET_TYPE:
                     Ticket ticket = (Ticket)object;
                     ((TicketViewHolder) holder).ticketEstadoCard.setText(ticket.getCondicion());
-                    ((TicketViewHolder) holder).ticketFechaCard.setText(ticket.getFecha());
-                    if(ticketItemClickListener!=null) {
-                        ((TicketViewHolder) holder).ticketImageCard.setOnClickListener(this.ticketItemClickListener);
+                    ((TicketViewHolder) holder).ticketFechaCard.setText(parseFechaView(ticket.getFecha()));
+                    if(ticket.getListener() != null) {
+                        ((TicketViewHolder) holder).ticketImageCard.setOnClickListener(ticket.getListener());
+                    }
+                    GradientDrawable shape =  new GradientDrawable();
+                    shape.setCornerRadius( 8 );
+                    switch (ticket.getCondicion()){
+                        case "cancelado":
+                            shape.setColor(ResourcesCompat.getColor(mContext.getResources(),R.color.md_red_400,null));
+                            break;
+                        case "usado":
+                            shape.setColor(ResourcesCompat.getColor(mContext.getResources(),R.color.md_deep_orange_400,null));
+                            break;
+                        case "activo":
+                            shape.setColor(ResourcesCompat.getColor(mContext.getResources(),R.color.md_green_400,null));
+                            break;
+                        case "vencido":
+                            shape.setColor(ResourcesCompat.getColor(mContext.getResources(),R.color.md_deep_purple_400,null));
+                            break;
+
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        ((TicketViewHolder) holder).ticketEstadoCard.setBackground(shape);
                     }
                     break;
                 case TicketMenu.MENU_TYPE:
                     Menu menu = (Menu)object;
-                    ((MenuViewHolder) holder).menuPrecioCard.setText(String.valueOf(menu.getPrecio()));
-                    ((MenuViewHolder) holder).menuFechaCard.setText(menu.getFecha());
-                    if(menuItemClickListener!=null) {
-                        ((MenuViewHolder) holder).menuImageCard.setOnClickListener(this.menuItemClickListener);
+                    ((MenuViewHolder) holder).menuPrecioCard.setText(DecimalFormat.getCurrencyInstance().format(menu.getPrecio()));
+                    ((MenuViewHolder) holder).menuFechaCard.setText(parseFechaView(menu.getFecha()));
+                    if(menu.getListener() != null) {
+                        ((MenuViewHolder) holder).menuImageCard.setOnClickListener(menu.getListener());
                     }
                     break;
                 case TicketMenu.EMPTY_TYPE:
                     ((EmptyViewHolder) holder).emptyInfoCard.setText(object.getInfo());
-                    if(emptyItemClickListener!=null) {
-                        ((EmptyViewHolder) holder).emptyImageCard.setOnClickListener(this.emptyItemClickListener);
+                    if(object.getListener()!=null) {
+                        ((EmptyViewHolder) holder).emptyImageCard.setOnClickListener(object.getListener());
                     }
                     break;
             }
@@ -127,22 +152,28 @@ public class TicketMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return lista.size();
     }
 
-
     public void removeAt(int position) {
         lista.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, lista.size());
     }
 
-    public void setTicketItemClickListener(View.OnClickListener ticketItemClickListener) {
-        this.ticketItemClickListener = ticketItemClickListener;
+    public void add(TicketMenu item, int position) {
+        lista.add(position, item);
+        notifyItemInserted(position);
     }
 
-    public void setMenuItemClickListener(View.OnClickListener menuItemClickListener) {
-        this.menuItemClickListener = menuItemClickListener;
-    }
 
-    public void setEmptyItemClickListener(View.OnClickListener emptyItemClickListener) {
-        this.emptyItemClickListener = emptyItemClickListener;
+    public String parseFechaView(String fecha){
+        String resultado = "";
+        SimpleDateFormat simpleDateFormatBase=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormatView=new SimpleDateFormat("EEEE dd MMM");
+        try {
+            Date date = simpleDateFormatBase.parse(fecha);
+            return simpleDateFormatView.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return resultado;
     }
 }

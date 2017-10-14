@@ -6,9 +6,17 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="layaout_card_padding">4dp</dimen>
-    <dimen name="card_padding">4dp</dimen>
+    <dimen name="layaout_card_padding">0dp</dimen>
+    <dimen name="card_layout_margin">8dp</dimen>
+    <dimen name="card_padding">8dp</dimen>
     <dimen name="card_contentPadding">4dp</dimen>
-    <dimen name="cardElevation">6dp</dimen>
+    <dimen name="cardElevation">8dp</dimen>
+    <dimen name="card_layout_button_padding">8dp</dimen>
+    <dimen name="card_layout_content_title_padding_top">24dp</dimen>
+    <dimen name="card_layout_content_title_padding_side">16dp</dimen>
+    <dimen name="card_layout_content_title_padding_bottom">16dp</dimen>
+    <dimen name="card_layout_content_title_text_size">24sp</dimen>
+    <dimen name="card_layout_content_subtext_text_size">14sp</dimen>
+    <dimen name="card_layout_content_subtext_padding">16dp</dimen>
 
 </resources>

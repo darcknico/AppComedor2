@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by karen on 27/6/2017.
  */
 
-public class Transaccion {
+public class Transaccion extends Empty {
     private int id;
     private int idUsuario;
     private String concepto;

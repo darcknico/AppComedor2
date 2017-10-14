@@ -2,49 +2,41 @@ package com.example.aldebaran.appcomedor;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionSet;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.transition.Transition;
+import android.transition.TransitionInflater;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ExpandableListView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.aldebaran.appcomedor.adapter.TicketMenuAdapter;
 import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
-import com.example.aldebaran.appcomedor.apirest.RespuestaListaAPI;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
 import com.example.aldebaran.appcomedor.fragment.HomeFragment;
 import com.example.aldebaran.appcomedor.fragment.ListaFragment;
-import com.example.aldebaran.appcomedor.modelos.Ticket;
-import com.example.aldebaran.appcomedor.modelos.TicketMenu;
+import com.example.aldebaran.appcomedor.fragment.TransaccionFragment;
+import com.example.aldebaran.appcomedor.modelos.Transaccion;
 import com.example.aldebaran.appcomedor.modelos.Usuario;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,9 +45,13 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private CoordinatorLayout coordinatorLayout;
+    public static final long MOVE_DEFAULT_TIME = 300;
+    public static final long FADE_DEFAULT_TIME = 300;
 
+    private CoordinatorLayout coordinatorLayout;
     private NavigationView navigationView;
+    private FragmentManager mFragmentManager;
+    private Handler mDelayedTransactionHandler;
 
     //nav header
     private TextView mainNombreUsuario;
@@ -76,7 +72,7 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        displaySelectedScreen(R.id.nav_home);
+
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
@@ -93,6 +89,14 @@ public class MainActivity extends AppCompatActivity
 
         actualizarUsuario();
 
+        mFragmentManager = getSupportFragmentManager();
+        mDelayedTransactionHandler = new Handler();
+
+        mFragmentManager
+                .beginTransaction()
+                .setCustomAnimations(R.anim.mpsdk_slide_up_to_down_in,R.anim.mpsdk_slide_down_to_top_out)
+                .replace(R.id.content_frame,  new HomeFragment())
+                .commit();
     }
 
     @Override
@@ -117,8 +121,13 @@ public class MainActivity extends AppCompatActivity
                     }
                 } else {
                     if (response.code() == 401) {
+                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        sp.edit().clear().apply();
                         Snackbar.make(coordinatorLayout, "Perdio la session", Snackbar.LENGTH_LONG)
                                 .show();
+                        finish();
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
                     }
                 }
             }
@@ -133,6 +142,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        if(navigationView.getMenu().getItem(0).isChecked()){
+            finish();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -154,8 +166,9 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    Fragment fragment = null;
     public void displaySelectedScreen(int id){
-        Fragment fragment = null;
+        fragment = null;
         switch (id){
             case R.id.nav_home:
                 fragment = new HomeFragment();
@@ -173,14 +186,49 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.nav_transaccion:
+                fragment = new TransaccionFragment();
+                break;
             case R.id.nav_close:
                 finish();
                 break;
         }
         if (fragment != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, fragment);
-            ft.commit();
+
+            mDelayedTransactionHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Fragment previousFragment = mFragmentManager.findFragmentById(R.id.content_frame);
+                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+                    Slide exitFade = new Slide();
+                    exitFade.setSlideEdge(Gravity.TOP);
+                    exitFade.setDuration(FADE_DEFAULT_TIME);
+                    previousFragment.setExitTransition(exitFade);
+
+                    TransitionSet enterTransitionSet = new TransitionSet();
+                    enterTransitionSet.addTransition(TransitionInflater.from(getApplicationContext()).inflateTransition(android.R.transition.slide_top));
+                    enterTransitionSet.setDuration(MOVE_DEFAULT_TIME);
+                    enterTransitionSet.setStartDelay(FADE_DEFAULT_TIME);
+                    fragment.setSharedElementEnterTransition(enterTransitionSet);
+
+                    Slide enterFade = new Slide();
+                    enterFade.setSlideEdge(Gravity.TOP);
+                    enterFade.setStartDelay(MOVE_DEFAULT_TIME + FADE_DEFAULT_TIME);
+                    enterFade.setDuration(FADE_DEFAULT_TIME);
+                    fragment.setEnterTransition(enterFade);
+
+                    fragmentTransaction.replace(R.id.content_frame, fragment);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    /*
+                    mFragmentManager
+                            .beginTransaction()
+                            .setCustomAnimations(R.anim.mpsdk_slide_up_to_down_in,R.anim.mpsdk_slide_down_to_top_out)
+                            .replace(R.id.content_frame, fragment)
+                            .commit();
+                            */
+                }
+            }, 250);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -192,5 +240,12 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         displaySelectedScreen(item.getItemId());
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        fragment.onActivityResult(requestCode, resultCode, data);
     }
 }

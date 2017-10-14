@@ -3,9 +3,9 @@ package com.example.aldebaran.appcomedor.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,14 +15,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.aldebaran.appcomedor.MainActivity;
 import com.example.aldebaran.appcomedor.R;
 import com.example.aldebaran.appcomedor.adapter.TicketMenuAdapter;
 import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
 import com.example.aldebaran.appcomedor.apirest.RespuestaListaAPI;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
+import com.example.aldebaran.appcomedor.modelos.Empty;
+import com.example.aldebaran.appcomedor.modelos.Menu;
 import com.example.aldebaran.appcomedor.modelos.Ticket;
 import com.example.aldebaran.appcomedor.modelos.TicketMenu;
 import com.example.aldebaran.appcomedor.modelos.Usuario;
@@ -33,6 +38,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,10 +52,14 @@ public class HomeFragment extends Fragment {
     private RelativeLayout homeLayout;
     private TextView homeNombreUsuario,homeTicketUsuario,homeSaldoUsuario,homeDocumentoUsuario,homeEstadoUsuario;
     private RecyclerView homeRecyclerView;
+    private FrameLayout homeFrame;
     private TicketMenuAdapter adapter;
     private ArrayList<TicketMenu> listaTicketMenu;
 
+    private View v;
     private String token;
+    private int idMenu;
+    private int idTicket;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -59,7 +70,20 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        v =  inflater.inflate(R.layout.fragment_home, container, false);
+        homeRecyclerView = (RecyclerView) v.findViewById(R.id.homeRecyclerView);
+        listaTicketMenu = new ArrayList<>();
+        adapter = new TicketMenuAdapter(v.getContext(),listaTicketMenu);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        homeRecyclerView.setLayoutManager(linearLayoutManager);
+        SlideInDownAnimator animator = new SlideInDownAnimator(new OvershootInterpolator(1f));
+        homeRecyclerView.setItemAnimator(animator);
+        homeRecyclerView.setAdapter(adapter);
+        homeRecyclerView.getItemAnimator().setAddDuration(750);
+        homeRecyclerView.getItemAnimator().setRemoveDuration(750);
+        homeRecyclerView.getItemAnimator().setMoveDuration(750);
+        homeRecyclerView.getItemAnimator().setChangeDuration(750);
+        return v;
     }
 
     @Override
@@ -75,21 +99,20 @@ public class HomeFragment extends Fragment {
         homeSaldoUsuario = (TextView) view.findViewById(R.id.homeSaldoUsuario);
         homeDocumentoUsuario = (TextView) view.findViewById(R.id.homeDocumentoUsuario);
         homeEstadoUsuario = (TextView) view.findViewById(R.id.homeEstadoUsuario);
-        homeRecyclerView = (RecyclerView) view.findViewById(R.id.homeRecyclerView);
-        homeEstadoUsuario = (TextView) view.findViewById(R.id.homeEstadoUsuario);
+        homeFrame = (FrameLayout) view.findViewById(R.id.homeFrame);
 
+        homeFrame.animate().setDuration(1000);
+
+        getActivity().setTitle("Applicacion del Comedor");
         actualizarUsuario();
 
-        listaTicketMenu = new ArrayList<TicketMenu>();
-        adapter = new TicketMenuAdapter(view.getContext(),listaTicketMenu);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext(), OrientationHelper.VERTICAL, false);
-        homeRecyclerView.setLayoutManager(linearLayoutManager);
-        homeRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        homeRecyclerView.setAdapter(adapter);
-
-        obtenerMenus();
-        obtenerTickets();
-        getActivity().setTitle("Applicacion del Comedor");
+        Handler mDelayedTransactionHandler = new Handler();
+        mDelayedTransactionHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                obtenerTickets();
+            }
+        }, MainActivity.MOVE_DEFAULT_TIME + MainActivity.FADE_DEFAULT_TIME);
     }
 
     public void actualizarUsuario(){
@@ -129,23 +152,34 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<RespuestaListaAPI>() {
             @Override
             public void onResponse(Call<RespuestaListaAPI> call, Response<RespuestaListaAPI> response) {
-                RespuestaListaAPI respuesta = null;
+                obtenerMenus();
                 Gson gson = new Gson();
                 if (response.isSuccessful()) {
-                    respuesta = response.body();
+                    RespuestaListaAPI respuesta = response.body();
                     Type listType = new TypeToken<List<Ticket>>() {}.getType();
                     List<Ticket> lista = gson.fromJson(respuesta.getSalida(),listType);
                     if(lista.size()>0) {
                         Ticket ticket = lista.get(0);
                         ticket.setTipo(TicketMenu.TICKET_TYPE);
-                        listaTicketMenu.add(ticket);
+                        idTicket = ticket.getId();
+                        ticket.setListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("id",idTicket);
+                                TicketFragment fragment = new TicketFragment();
+                                fragment.setArguments(bundle);
+                                _LoadFragment(fragment);
+                            }
+                        });
+                        adapter.add(ticket,0);
                     } else {
                         TicketMenu ticket = new TicketMenu();
                         ticket.setInfo("No tiene tickets");
-                        listaTicketMenu.add(ticket);
+                        adapter.add(ticket,0);
                     }
-                    adapter.notifyDataSetChanged();
                 } else {
+
                 }
             }
 
@@ -154,6 +188,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
 
     void obtenerMenus(){
         Call<RespuestaListaAPI> call = RestClient.getClient().menuLista(token);
@@ -167,13 +202,32 @@ public class HomeFragment extends Fragment {
                     Type listType = new TypeToken<List<com.example.aldebaran.appcomedor.modelos.Menu>>() {}.getType();
                     List<com.example.aldebaran.appcomedor.modelos.Menu> lista= gson.fromJson(respuesta.getSalida(),listType);
                     if(lista.size()>0) {
-                        com.example.aldebaran.appcomedor.modelos.Menu menu = lista.get(0);
+                        Menu menu = lista.get(0);
                         menu.setTipo(TicketMenu.MENU_TYPE);
-                        listaTicketMenu.add(menu);
+                        idMenu = menu.getId();
+                        menu.setListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("id",idMenu);
+                                MenuFragment fragment = new MenuFragment();
+                                fragment.setArguments(bundle);
+                                _LoadFragment(fragment);
+                            }
+                        });
+                        if(listaTicketMenu.size()==0) {
+                            adapter.add(menu,0);
+                        } else {
+                            adapter.add(menu,1);
+                        }
                     } else {
-                        TicketMenu ticket = new TicketMenu();
-                        ticket.setInfo("No hay menus nuevos");
-                        listaTicketMenu.add(ticket);
+                        TicketMenu menu = new TicketMenu();
+                        menu.setInfo("No hay menus nuevos");
+                        if(listaTicketMenu.size()==0) {
+                            adapter.add(menu,0);
+                        } else {
+                            adapter.add(menu,1);
+                        }
                     }
                     adapter.notifyDataSetChanged();
                 } else {
@@ -186,5 +240,14 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<RespuestaListaAPI> call, Throwable t) {
             }
         });
+    }
+
+    public void _LoadFragment(Fragment _frag){
+        getChildFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.mpsdk_slide_up_to_down_in,R.anim.mpsdk_slide_down_to_top_out)
+                .replace(R.id.homeFrame, _frag)
+                .addToBackStack(null)
+                .commit();
     }
 }

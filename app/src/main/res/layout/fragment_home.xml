@@ -13,17 +13,25 @@
         android:orientation="vertical"
         android:padding="@dimen/layaout_card_padding">
 
+        <FrameLayout
+            android:id="@+id/homeFrame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <android.support.v7.widget.CardView
             android:id="@+id/HomeCardUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/card_layout_margin"
+            android:layout_marginLeft="@dimen/card_layout_margin"
+            android:layout_marginRight="@dimen/card_layout_margin"
             app:cardElevation="@dimen/cardElevation"
-            app:cardUseCompatPadding="true"
             app:contentPadding="@dimen/card_contentPadding">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:padding="@dimen/card_layout_content_subtext_padding">
 
                 <TextView
                     android:id="@+id/homeNombreUsuario"

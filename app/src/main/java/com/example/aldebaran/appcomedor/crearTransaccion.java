@@ -185,7 +185,7 @@ public class crearTransaccion extends AppCompatActivity {
                 String cardToken = paymentData.getToken() == null ? " " : paymentData.getToken().getId();
                 Long campaignId = paymentData.getDiscount() == null ? 0 : paymentData.getDiscount().getId();
                 Transaccion transaccion = new Transaccion();
-                transaccion.setMonto(importe.getText().toString());
+                transaccion.setMonto(Double.parseDouble(importe.getText().toString()));
                 transaccion.setConcepto(conceptoSeleccionado);
                 transaccion.setFecha_acreditacion(fecha.getText().toString());
                 transaccion.setPaymentMethodId(paymentMethodId);

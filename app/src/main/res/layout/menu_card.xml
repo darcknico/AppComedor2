@@ -21,8 +21,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="false"
             android:cropToPadding="false"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_action_refrescar" />
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_menu" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -40,14 +40,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Menu:  " />
+                    android:text="Menu del dia "
+                    android:textColor="@color/md_black_1000"
+                    android:textSize="@dimen/card_layout_content_subtext_text_size" />
 
                 <TextView
                     android:id="@+id/menuFechaCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="DD/MM" />
+                    android:text="DD/MM"
+                    android:textSize="@dimen/card_layout_content_subtext_text_size" />
             </LinearLayout>
 
             <TextView

@@ -95,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
                         homeNombreUsuario.setText(item.getNombre() + " " + item.getApellido());
                         homeDocumentoUsuario.setText(item.getDni());
                         homeEstadoUsuario.setText(item.getCondicion());
-                        homeSaldoUsuario.setText(item.getSaldo());
+                        //homeSaldoUsuario.setText(item.getSaldo());
                         homeTicketUsuario.setText(item.getTickets());
                     } else {
                         homeSaldoUsuario.setText("ADMINISTRADOR");

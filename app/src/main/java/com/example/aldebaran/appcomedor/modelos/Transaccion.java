@@ -12,7 +12,7 @@ public class Transaccion extends Empty {
     private int idUsuario;
     private String concepto;
     private String token;
-    private String monto;
+    private double monto;
     private String estado_transaccion;
     private String fecha_acreditacion;
     private String paymentMethodId;
@@ -20,6 +20,7 @@ public class Transaccion extends Empty {
     private String installment;
     private String cardToken;
     private String campaignId;
+    private String creado;
 
     public int getId() {
         return id;
@@ -53,11 +54,11 @@ public class Transaccion extends Empty {
         this.token = token;
     }
 
-    public String getMonto() {
+    public double getMonto() {
         return monto;
     }
 
-    public void setMonto(String monto) {
+    public void setMonto(double monto) {
         this.monto = monto;
     }
 
@@ -115,5 +116,13 @@ public class Transaccion extends Empty {
 
     public void setCampaignId(String campaignId) {
         this.campaignId = campaignId;
+    }
+
+    public String getCreado() {
+        return creado;
+    }
+
+    public void setCreado(String creado) {
+        this.creado = creado;
     }
 }

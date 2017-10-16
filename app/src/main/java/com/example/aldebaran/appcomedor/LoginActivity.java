@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Build;
@@ -43,11 +44,14 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnRegistrar;
     private Toolbar toolbar;
     private TextView titulo;
+    private TextInputLayout dni_layout;
+    private TextInputLayout password_layout;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (sp!=null) {
@@ -60,17 +64,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-        setContentView(R.layout.activity_login);
+        dni_layout = (TextInputLayout) findViewById(R.id.dni_layout);
+        password_layout = (TextInputLayout) findViewById(R.id.password_layout);
+        mDniView = (AutoCompleteTextView) findViewById(R.id.dni);
+        mPasswordView = (EditText) findViewById(R.id.password);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         titulo = (TextView) findViewById(R.id.titulo_toolbar);
         titulo.setText("App Comedor - Login");
-
-
-        // Set up the login form.
-        mDniView = (AutoCompleteTextView) findViewById(R.id.dni);
-        mPasswordView = (EditText) findViewById(R.id.password);
 
         //si se escribio una contraseña se puede intentar el logeo
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -109,26 +112,19 @@ public class LoginActivity extends AppCompatActivity {
         String dni = mDniView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-
-        // Reset errors.
-        mDniView.setError(null);
-        mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-
+        dni_layout.setError(null);
+        password_layout.setError(null);
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+            password_layout.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid dni.
         if (TextUtils.isEmpty(dni) && !isDniValid(dni)) {
-            mDniView.setError(getString(R.string.error_field_required));
+            dni_layout.setError(getString(R.string.error_field_required));
             focusView = mDniView;
             cancel = true;
         }

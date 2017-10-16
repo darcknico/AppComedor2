@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
 import com.example.aldebaran.appcomedor.apirest.RespuestaErrorApi;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
 import com.example.aldebaran.appcomedor.modelos.Menu;
+import com.example.aldebaran.appcomedor.utils.Singleton;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -101,6 +103,7 @@ public class MenuFragment extends Fragment {
         Animation animation = super.onCreateAnimation(transit, enter, nextAnim);
         if (animation == null && nextAnim != 0) {
             animation = AnimationUtils.loadAnimation(getActivity(), nextAnim);
+            animation.setDuration(MainActivity.FADE_DEFAULT_TIME + MainActivity.MOVE_DEFAULT_TIME);
         }
 
         if (animation != null) {
@@ -124,7 +127,7 @@ public class MenuFragment extends Fragment {
 
             });
         }
-        animation.setDuration(MainActivity.FADE_DEFAULT_TIME + MainActivity.MOVE_DEFAULT_TIME);
+
         return animation;
     }
 
@@ -138,7 +141,7 @@ public class MenuFragment extends Fragment {
                     RespuestaAPI respuesta = response.body();
                     Menu item = gson.fromJson(respuesta.getSalida(),Menu.class);
                     menuFechaTextView.setText(parseFechaView(item.getFecha()));
-                    menuPrecioTextView.setText(DecimalFormat.getCurrencyInstance().format(item.getPrecio()));
+                    menuPrecioTextView.setText("Precio: "+DecimalFormat.getCurrencyInstance().format(item.getPrecio()));
 
                     try {
                         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
@@ -178,11 +181,12 @@ public class MenuFragment extends Fragment {
                     RespuestaAPI respuesta = response.body();
                     snackbar(respuesta.getResultado());
                     menuComprarButton.setVisibility(View.GONE);
+                    Singleton.getInstance().getMainActivity().reloadFragment();
                 } else {
                     try {
                         RespuestaErrorApi respuesta = gson.fromJson(response.errorBody().string(),RespuestaErrorApi.class);
-                        if (response.code() != 401) {
-                            snackbar(respuesta.getResultado());
+                        if (response.code() == 403) {
+                            snackbar(respuesta.getSalida().getAsString());
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

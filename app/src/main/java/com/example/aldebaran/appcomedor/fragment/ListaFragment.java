@@ -25,6 +25,7 @@ import com.example.aldebaran.appcomedor.R;
 import com.example.aldebaran.appcomedor.adapter.TicketMenuAdapter;
 import com.example.aldebaran.appcomedor.apirest.RespuestaListaAPI;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
+import com.example.aldebaran.appcomedor.listener.TicketMenuListener;
 import com.example.aldebaran.appcomedor.modelos.Menu;
 import com.example.aldebaran.appcomedor.modelos.Ticket;
 import com.example.aldebaran.appcomedor.modelos.TicketMenu;
@@ -134,16 +135,7 @@ public class ListaFragment extends Fragment {
                         for(Menu menu: lista){
                             menu.setTipo(TicketMenu.MENU_TYPE);
                             id = menu.getId();
-                            menu.setListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Bundle bundle = new Bundle();
-                                    bundle.putInt("id",id);
-                                    MenuFragment fragment = new MenuFragment();
-                                    fragment.setArguments(bundle);
-                                    _LoadFragment(fragment);
-                                }
-                            });
+                            menu.setListener(new TicketMenuListener(menu,ListaFragment.this));
                             adapter.add(menu,i++);
                         }
                     } else {
@@ -179,16 +171,7 @@ public class ListaFragment extends Fragment {
                         for (Ticket ticket : lista){
                             ticket.setTipo(TicketMenu.TICKET_TYPE);
                             id = ticket.getId();
-                            ticket.setListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Bundle bundle = new Bundle();
-                                    bundle.putInt("id",id);
-                                    TicketFragment fragment = new TicketFragment();
-                                    fragment.setArguments(bundle);
-                                    _LoadFragment(fragment);
-                                }
-                            });
+                            ticket.setListener(new TicketMenuListener(ticket,ListaFragment.this));
                             adapter.add(ticket,i++);
                         }
                     } else {

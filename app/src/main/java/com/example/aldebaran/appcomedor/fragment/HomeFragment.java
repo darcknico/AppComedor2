@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ import retrofit2.Response;
 public class HomeFragment extends Fragment {
 
     private RelativeLayout homeLayout;
-    private TextView homeNombreUsuario,homeTicketUsuario,homeSaldoUsuario,homeDocumentoUsuario,homeEstadoUsuario;
+    private TextView homeTicketUsuario,homeSaldoUsuario,homeEstadoUsuario;
     private RecyclerView homeRecyclerView;
     private FrameLayout homeFrame;
     private TicketMenuAdapter adapter;
@@ -94,10 +95,8 @@ public class HomeFragment extends Fragment {
         token = sp.getString("token","");
 
         homeLayout = (RelativeLayout) view.findViewById(R.id.homeLayout);
-        homeNombreUsuario = (TextView) view.findViewById(R.id.homeNombreUsuario);
         homeTicketUsuario = (TextView) view.findViewById(R.id.homeTicketUsuario);
         homeSaldoUsuario = (TextView) view.findViewById(R.id.homeSaldoUsuario);
-        homeDocumentoUsuario = (TextView) view.findViewById(R.id.homeDocumentoUsuario);
         homeEstadoUsuario = (TextView) view.findViewById(R.id.homeEstadoUsuario);
         homeFrame = (FrameLayout) view.findViewById(R.id.homeFrame);
 
@@ -115,6 +114,12 @@ public class HomeFragment extends Fragment {
         }, MainActivity.MOVE_DEFAULT_TIME + MainActivity.FADE_DEFAULT_TIME);
     }
 
+    @Override
+    public void onStart() {
+        actualizarUsuario();
+        super.onStart();
+    }
+
     public void actualizarUsuario(){
         Call<RespuestaAPI> loginCall = RestClient.getClient().usuarioObtener(token);
         loginCall.enqueue(new Callback<RespuestaAPI>() {
@@ -124,13 +129,9 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful()) {
                     if(!response.body().getSalida().isJsonArray()) {
                         Usuario item = gson.fromJson(response.body().getSalida(), Usuario.class);
-                        homeNombreUsuario.setText(item.getNombre() + " " + item.getApellido());
-                        homeDocumentoUsuario.setText(item.getDni());
                         homeEstadoUsuario.setText(item.getCondicion());
-                        homeSaldoUsuario.setText(item.getSaldo());
-                        homeTicketUsuario.setText(item.getTickets());
-                    } else {
-                        homeSaldoUsuario.setText("ADMINISTRADOR");
+                        homeSaldoUsuario.setText("Saldo: "+ DecimalFormat.getCurrencyInstance().format(item.getSaldo()));
+                        homeTicketUsuario.setText("Tickets que puede comprar "+item.getTickets());
                     }
                 } else {
                     if (response.code() == 401) {
@@ -142,13 +143,15 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RespuestaAPI> call, Throwable t) {
-
+                homeSaldoUsuario.setText("ADMINISTRADOR");
+                homeTicketUsuario.setText("");
+                homeEstadoUsuario.setText("SIN CONDICION");
             }
         });
     }
 
     public void obtenerTickets(){
-        Call<RespuestaListaAPI> call = RestClient.getClient().ticketLista(token);
+        Call<RespuestaListaAPI> call = RestClient.getClient().ticketLista(token,"activo");
         call.enqueue(new Callback<RespuestaListaAPI>() {
             @Override
             public void onResponse(Call<RespuestaListaAPI> call, Response<RespuestaListaAPI> response) {
@@ -175,7 +178,7 @@ public class HomeFragment extends Fragment {
                         adapter.add(ticket,0);
                     } else {
                         TicketMenu ticket = new TicketMenu();
-                        ticket.setInfo("No tiene tickets");
+                        ticket.setInfo("No tiene tickets sin usar");
                         adapter.add(ticket,0);
                     }
                 } else {
@@ -222,7 +225,7 @@ public class HomeFragment extends Fragment {
                         }
                     } else {
                         TicketMenu menu = new TicketMenu();
-                        menu.setInfo("No hay menus nuevos");
+                        menu.setInfo("No hay menus disponibles");
                         if(listaTicketMenu.size()==0) {
                             adapter.add(menu,0);
                         } else {
@@ -246,8 +249,8 @@ public class HomeFragment extends Fragment {
         getChildFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.mpsdk_slide_up_to_down_in,R.anim.mpsdk_slide_down_to_top_out)
+                .addToBackStack("init")
                 .replace(R.id.homeFrame, _frag)
-                .addToBackStack(null)
                 .commit();
     }
 }

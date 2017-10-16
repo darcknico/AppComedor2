@@ -131,7 +131,7 @@ public class TicketMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     break;
                 case TicketMenu.MENU_TYPE:
                     Menu menu = (Menu)object;
-                    ((MenuViewHolder) holder).menuPrecioCard.setText(DecimalFormat.getCurrencyInstance().format(menu.getPrecio()));
+                    ((MenuViewHolder) holder).menuPrecioCard.setText("Precio: "+DecimalFormat.getCurrencyInstance().format(menu.getPrecio()));
                     ((MenuViewHolder) holder).menuFechaCard.setText(parseFechaView(menu.getFecha()));
                     if(menu.getListener() != null) {
                         ((MenuViewHolder) holder).menuImageCard.setOnClickListener(menu.getListener());

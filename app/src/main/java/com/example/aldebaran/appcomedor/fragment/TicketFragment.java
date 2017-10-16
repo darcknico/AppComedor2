@@ -26,6 +26,7 @@ import com.example.aldebaran.appcomedor.apirest.RespuestaAPI;
 import com.example.aldebaran.appcomedor.apirest.RespuestaErrorApi;
 import com.example.aldebaran.appcomedor.apirest.RestClient;
 import com.example.aldebaran.appcomedor.modelos.Ticket;
+import com.example.aldebaran.appcomedor.utils.Singleton;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -179,8 +180,11 @@ public class TicketFragment extends Fragment {
                 Gson gson = new Gson();
                 if (response.isSuccessful()) {
                     RespuestaAPI respuesta = response.body();
+                    Ticket item = gson.fromJson(respuesta.getSalida(),Ticket.class);
+                    ticketTitleText.setText(item.getCondicion().toUpperCase()+" - "+parseFechaView(item.getFecha()));
                     snackbar(respuesta.getResultado());
-                    ticketBajaButton.setVisibility(View.INVISIBLE);
+                    ticketBajaButton.setVisibility(View.GONE);
+                    Singleton.getInstance().getMainActivity().reloadFragment();
                 } else {
                     try {
                         RespuestaErrorApi respuesta = gson.fromJson(response.errorBody().string(),RespuestaErrorApi.class);

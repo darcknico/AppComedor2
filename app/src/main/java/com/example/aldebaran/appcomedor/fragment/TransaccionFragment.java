@@ -13,7 +13,10 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.method.KeyListener;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +36,7 @@ import com.example.aldebaran.appcomedor.modelos.Empty;
 import com.example.aldebaran.appcomedor.modelos.Transaccion;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.zxing.common.StringUtils;
 import com.mercadopago.constants.PaymentMethods;
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.constants.Sites;
@@ -119,26 +123,25 @@ public class TransaccionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String imp = transaccionMontoTextView.getText().toString();
-                List<String> excluirTiposPagos = new ArrayList<String>();
-                excluirTiposPagos.add(PaymentTypes.CREDIT_CARD);
-                excluirTiposPagos.add(PaymentTypes.BANK_TRANSFER);
-                excluirTiposPagos.add(PaymentTypes.ATM);
-                excluirTiposPagos.add(PaymentTypes.PREPAID_CARD);
-
                 if(!TextUtils.isEmpty(imp)) {
-                    GregorianCalendar gc = new GregorianCalendar();
-                    gc.add(Calendar.DATE, 1);
-                    CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
-                            .addItem(new Item("Carga Comedor", new BigDecimal(imp)))
-                            .setSite(Sites.ARGENTINA)
-                            .addExcludedPaymentTypes(excluirTiposPagos)
-                            .addExcludedPaymentMethod(PaymentMethods.ARGENTINA.VISA) //Exclude specific payment methods
-                            .setMaxInstallments(1) //Limit the amount of installments
-                            .setExpirationDate(gc.getTime())
-                            .setActiveFrom(new Date())
-                            .build();
-                    startMercadoPagoCheckout(checkoutPreference);
+                    setupMercadoPago(imp);
                 }
+            }
+        });
+
+        transaccionMontoTextView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    String imp = transaccionMontoTextView.getText().toString();
+                    if(!TextUtils.isEmpty(imp)){
+                        setupMercadoPago(imp);
+                        return true;
+                    }
+                    return false;
+                }
+                return false;
             }
         });
 
@@ -165,11 +168,11 @@ public class TransaccionFragment extends Fragment {
                 if (response.isSuccessful()) {
                     RespuestaListaAPI respuesta = response.body();
                     Type listType = new TypeToken<List<Transaccion>>() {}.getType();
-                    List<Empty> lista = gson.fromJson(respuesta.getSalida(),listType);
+                    List<Transaccion> listaTransaccions = gson.fromJson(respuesta.getSalida(),listType);
                     adapter.removeAt(0);
-                    if(lista.size()>0) {
+                    if(listaTransaccions.size()>0) {
                         int i = 0;
-                        for(Empty transaccion: lista){
+                        for(Transaccion transaccion: listaTransaccions){
                             transaccion.setTipo(Empty.TRANSACCION_TYPE);
                             adapter.add(transaccion,i++);
                         }
@@ -205,6 +208,13 @@ public class TransaccionFragment extends Fragment {
                 if (response.isSuccessful()) {
                     RespuestaAPI respuesta = response.body();
                     snackbar(respuesta.getResultado());
+                    Type itemType = new TypeToken<Transaccion>() {}.getType();
+                    Transaccion transaccion = gson.fromJson(respuesta.getSalida(),itemType);
+                    transaccion.setTipo(Empty.TRANSACCION_TYPE);
+                    if(lista.get(0).getTipo()==Empty.EMPTY_TYPE){
+                        adapter.removeAt(0);
+                    }
+                    adapter.add(transaccion);
                 } else {
                     try {
                         RespuestaErrorApi respuesta = gson.fromJson(response.errorBody().string(),RespuestaErrorApi.class);
@@ -224,6 +234,25 @@ public class TransaccionFragment extends Fragment {
         });
     }
 
+    private void setupMercadoPago(String imp){
+        List<String> excluirTiposPagos = new ArrayList<String>();
+        excluirTiposPagos.add(PaymentTypes.CREDIT_CARD);
+        excluirTiposPagos.add(PaymentTypes.BANK_TRANSFER);
+        excluirTiposPagos.add(PaymentTypes.ATM);
+        excluirTiposPagos.add(PaymentTypes.PREPAID_CARD);
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.add(Calendar.DATE, 1);
+        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
+                .addItem(new Item("Carga Comedor", new BigDecimal(imp)))
+                .setSite(Sites.ARGENTINA)
+                .addExcludedPaymentTypes(excluirTiposPagos)
+                .addExcludedPaymentMethod(PaymentMethods.ARGENTINA.VISA) //Exclude specific payment methods
+                .setMaxInstallments(1) //Limit the amount of installments
+                .setExpirationDate(gc.getTime())
+                .setActiveFrom(new Date())
+                .build();
+        startMercadoPagoCheckout(checkoutPreference);
+    }
     private void startMercadoPagoCheckout(CheckoutPreference checkoutPreference) {
         new MercadoPagoCheckout.Builder()
                 .setActivity(getActivity())
@@ -243,7 +272,7 @@ public class TransaccionFragment extends Fragment {
                 String cardToken = paymentData.getToken() == null ? " " : paymentData.getToken().getId();
                 Long campaignId = paymentData.getDiscount() == null ? 0 : paymentData.getDiscount().getId();
                 Transaccion transaccion = new Transaccion();
-                transaccion.setMonto(transaccionMontoTextView.getText().toString());
+                transaccion.setMonto(Double.parseDouble(transaccionMontoTextView.getText().toString()));
                 transaccion.setConcepto("saldo");
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String fecha = simpleDateFormat.format(Calendar.getInstance().getTime());
@@ -254,6 +283,8 @@ public class TransaccionFragment extends Fragment {
                 transaccion.setCardToken(cardToken);
                 transaccion.setCampaignId(String.valueOf(campaignId));
                 crear_transaccion(transaccion);
+                transaccionMontoTextView.clearFocus();
+                transaccionMontoTextView.setText("");
             } else if (resultCode == RESULT_CANCELED) {
                 if (data != null && data.getStringExtra("mercadoPagoError") != null) {
                     //Resolve error in checkout

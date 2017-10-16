@@ -110,12 +110,13 @@ public class comprarMenu extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     respuesta = response.body();
                     Usuario item = gson.fromJson(respuesta.getSalida(),Usuario.class);
+                    /*
                     if(item.getSaldo()!=null){
                         saldo.setText(item.getSaldo());
                     }
                     if(item.getTickets()!=null){
                         tickets_restantes = Integer.parseInt(item.getTickets());
-                    }
+                    }*/
 
                 } else {
                     try {

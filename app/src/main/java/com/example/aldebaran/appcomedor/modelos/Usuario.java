@@ -11,7 +11,7 @@ public class Usuario {
     private String nombre;
     private String apellido;
     private String token;
-    private String saldo;
+    private double saldo;
     private String tickets;
     private String condicion;
     private String contraseña;
@@ -56,11 +56,11 @@ public class Usuario {
         this.token = token;
     }
 
-    public String getSaldo() {
+    public double getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(String saldo) {
+    public void setSaldo(double saldo) {
         this.saldo = saldo;
     }
 

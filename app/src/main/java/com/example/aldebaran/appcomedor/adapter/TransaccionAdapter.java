@@ -45,7 +45,7 @@ public class TransaccionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         View view;
         switch (viewType) {
             case Empty.TRANSACCION_TYPE:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ticket_card, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaccion_card, parent, false);
                 return new TransaccionAdapter.TransaccionViewHolder(view);
             case Empty.EMPTY_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_card, parent, false);
@@ -79,7 +79,10 @@ public class TransaccionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             transaccionFechaAprobadoCard = (TextView) view.findViewById(R.id.transaccionFechaAprobadoCard);
             transaccionFechaCreadoCard = (TextView) view.findViewById(R.id.transaccionFechaCreadoCard);
         }
-
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return lista.get(position).getTipo();
     }
 
     @Override
@@ -90,10 +93,11 @@ public class TransaccionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 case Empty.TRANSACCION_TYPE:
                     Transaccion transaccion = (Transaccion)object;
                     ((TransaccionViewHolder) holder).transaccionMontoCard.setText(DecimalFormat.getCurrencyInstance().format(transaccion.getMonto()));
+                    ((TransaccionViewHolder) holder).transaccionFechaCreadoCard.setText(parseFechaView(transaccion.getCreado()));
                     ((TransaccionViewHolder) holder).transaccionFechaAprobadoCard.setText(parseFechaView(transaccion.getFecha_acreditacion()));
                     break;
                 case Empty.EMPTY_TYPE:
-                    ((TransaccionAdapter.EmptyViewHolder) holder).emptyInfoCard.setText(object.getInfo());
+                    ((EmptyViewHolder) holder).emptyInfoCard.setText(object.getInfo());
                     if(object.getListener()!=null) {
                         ((EmptyViewHolder) holder).emptyImageCard.setOnClickListener(object.getListener());
                     }
@@ -129,6 +133,11 @@ public class TransaccionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void add(Empty item, int position) {
         lista.add(position, item);
         notifyItemInserted(position);
+    }
+
+    public void add(Empty item) {
+        int position = lista.size();
+        add(item,position);
     }
 
 }

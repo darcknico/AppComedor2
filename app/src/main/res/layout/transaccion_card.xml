@@ -21,8 +21,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="false"
             android:cropToPadding="false"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_action_refrescar" />
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_transaccion_2" />
 
         <LinearLayout
             android:layout_width="wrap_content"

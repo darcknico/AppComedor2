@@ -66,6 +66,12 @@ public interface ApiRest {
     @GET("ticket")
     Call<RespuestaListaAPI> ticketLista(
             @Header("Authorization") String token);
+    //Listado de mis tickets por estado
+    @Headers( "Content-Type: application/json" )
+    @GET("ticket")
+    Call<RespuestaListaAPI> ticketLista(
+            @Header("Authorization") String token,
+            @Header("estado") String estado);
 
     //Cambiar estado del ticket a Cancelado
     @Headers( "Content-Type: application/json" )

@@ -36,6 +36,7 @@ import com.example.aldebaran.appcomedor.fragment.ListaFragment;
 import com.example.aldebaran.appcomedor.fragment.TransaccionFragment;
 import com.example.aldebaran.appcomedor.modelos.Transaccion;
 import com.example.aldebaran.appcomedor.modelos.Usuario;
+import com.example.aldebaran.appcomedor.utils.Singleton;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -97,6 +98,9 @@ public class MainActivity extends AppCompatActivity
                 .setCustomAnimations(R.anim.mpsdk_slide_up_to_down_in,R.anim.mpsdk_slide_down_to_top_out)
                 .replace(R.id.content_frame,  new HomeFragment())
                 .commit();
+
+        Singleton.getInstance().setMainActivity(this);
+        Singleton.getInstance().setUltimoFragment(R.id.nav_home);
     }
 
     @Override
@@ -134,7 +138,13 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<RespuestaAPI> call, Throwable t) {
-
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                sp.edit().clear().apply();
+                Snackbar.make(coordinatorLayout, "No tiene conexion", Snackbar.LENGTH_LONG)
+                        .show();
+                finish();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -172,12 +182,15 @@ public class MainActivity extends AppCompatActivity
         switch (id){
             case R.id.nav_home:
                 fragment = new HomeFragment();
+                Singleton.getInstance().setUltimoFragment(id);
                 break;
             case R.id.nav_menu:
                 fragment = new ListaFragment().setOption(ListaFragment.MENU);
+                Singleton.getInstance().setUltimoFragment(id);
                 break;
             case R.id.nav_ticket:
                 fragment = new ListaFragment().setOption(ListaFragment.TICKET);
+                Singleton.getInstance().setUltimoFragment(id);
                 break;
             case R.id.nav_logout:
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -188,51 +201,52 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_transaccion:
                 fragment = new TransaccionFragment();
+                Singleton.getInstance().setUltimoFragment(id);
                 break;
             case R.id.nav_close:
                 finish();
                 break;
         }
         if (fragment != null) {
-
-            mDelayedTransactionHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Fragment previousFragment = mFragmentManager.findFragmentById(R.id.content_frame);
-                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-
-                    Slide exitFade = new Slide();
-                    exitFade.setSlideEdge(Gravity.TOP);
-                    exitFade.setDuration(FADE_DEFAULT_TIME);
-                    previousFragment.setExitTransition(exitFade);
-
-                    TransitionSet enterTransitionSet = new TransitionSet();
-                    enterTransitionSet.addTransition(TransitionInflater.from(getApplicationContext()).inflateTransition(android.R.transition.slide_top));
-                    enterTransitionSet.setDuration(MOVE_DEFAULT_TIME);
-                    enterTransitionSet.setStartDelay(FADE_DEFAULT_TIME);
-                    fragment.setSharedElementEnterTransition(enterTransitionSet);
-
-                    Slide enterFade = new Slide();
-                    enterFade.setSlideEdge(Gravity.TOP);
-                    enterFade.setStartDelay(MOVE_DEFAULT_TIME + FADE_DEFAULT_TIME);
-                    enterFade.setDuration(FADE_DEFAULT_TIME);
-                    fragment.setEnterTransition(enterFade);
-
-                    fragmentTransaction.replace(R.id.content_frame, fragment);
-                    fragmentTransaction.commitAllowingStateLoss();
-                    /*
-                    mFragmentManager
-                            .beginTransaction()
-                            .setCustomAnimations(R.anim.mpsdk_slide_up_to_down_in,R.anim.mpsdk_slide_down_to_top_out)
-                            .replace(R.id.content_frame, fragment)
-                            .commit();
-                            */
-                }
-            }, 250);
+            replaceFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    public void reloadFragment(){
+        displaySelectedScreen(Singleton.getInstance().getUltimoFragment());
+    }
+
+    public void replaceFragment(){
+        mDelayedTransactionHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Fragment previousFragment = mFragmentManager.findFragmentById(R.id.content_frame);
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+                Slide exitFade = new Slide();
+                exitFade.setSlideEdge(Gravity.TOP);
+                exitFade.setDuration(FADE_DEFAULT_TIME);
+                previousFragment.setExitTransition(exitFade);
+
+                TransitionSet enterTransitionSet = new TransitionSet();
+                enterTransitionSet.addTransition(TransitionInflater.from(getApplicationContext()).inflateTransition(android.R.transition.slide_top));
+                enterTransitionSet.setDuration(MOVE_DEFAULT_TIME);
+                enterTransitionSet.setStartDelay(FADE_DEFAULT_TIME);
+                fragment.setSharedElementEnterTransition(enterTransitionSet);
+
+                Slide enterFade = new Slide();
+                enterFade.setSlideEdge(Gravity.TOP);
+                enterFade.setStartDelay(MOVE_DEFAULT_TIME + FADE_DEFAULT_TIME);
+                enterFade.setDuration(FADE_DEFAULT_TIME);
+                fragment.setEnterTransition(enterFade);
+
+                fragmentTransaction.replace(R.id.content_frame, fragment,"main");
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        }, 250);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
